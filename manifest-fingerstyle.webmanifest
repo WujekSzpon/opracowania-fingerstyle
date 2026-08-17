@@ -1,0 +1,27 @@
+{
+  "id": "/utwory-fingerstyle/",
+  "name": "Utwory Fingerstyle",
+  "short_name": "Fingerstyle",
+  "description": "Interaktywny konspekt Utwory Fingerstyle od Wujka Szpona.",
+  "lang": "pl",
+  "start_url": "/utwory-fingerstyle/",
+  "scope": "/utwory-fingerstyle/",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://wujekszpon.github.io/utwory-fingerstyle/manifest-fingerstyle.webmanifest",
+      "id": "https://wujekszpon.github.io/utwory-fingerstyle/"
+    }
+  ],
+  "icons": [
+    {
+      "src": "./pwa-fingerstyle.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
