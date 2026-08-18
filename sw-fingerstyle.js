@@ -1,8 +1,10 @@
-const CACHE_NAME = 'opracowania-fingerstyle-v1';
+const CACHE_NAME = 'opracowania-fingerstyle-v2';
 const APP_SHELL = [
   './',
   './manifest-fingerstyle.webmanifest',
-  './pwa-fingerstyle.svg'
+  './pwa-fingerstyle-192.png',
+  './pwa-fingerstyle-512.png',
+  './branding/opracowania-fingerstyle-kwadrat.png'
 ];
 
 self.addEventListener('install', event => {
