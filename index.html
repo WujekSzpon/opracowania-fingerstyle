@@ -496,6 +496,20 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 .artists-apply{border:0;background:var(--accent);color:#111;}
 @media(max-width:420px){#artists-choices{grid-template-columns:1fr}.artists-panel-title{font-size:18px}}
 
+/* DIFFICULTY MULTISELECT */
+#levels-dropdown{position:fixed;inset:0;z-index:202;display:none;}
+#levels-dropdown.open{display:block;}
+#levels-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.64);}
+#levels-panel{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-radius:16px 16px 0 0;padding:18px;max-height:78vh;overflow-y:auto;}
+@media(min-width:641px){#levels-panel{bottom:auto;left:50%;top:50%;right:auto;transform:translate(-50%,-50%);width:420px;max-height:82vh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.72);}}
+#levels-choices{display:grid;gap:7px;}
+.level-choice{display:grid;grid-template-columns:minmax(120px,1fr) minmax(160px,1.2fr);align-items:center;gap:18px;width:100%;border:1px solid #333;border-radius:8px;background:#151515;color:#ddd;padding:11px 13px;font:700 12px 'Open Sans',sans-serif;cursor:pointer;text-align:left;}
+.level-choice:hover,.level-choice:focus-visible{border-color:#777;color:#fff;outline:none;}
+.level-choice.active{border-color:var(--accent);background:rgba(255,204,0,.075);color:#fff;}
+.level-choice-name{white-space:nowrap;}
+.level-choice-stars{font:900 18px/1 'Arial Black',sans-serif;letter-spacing:2px;white-space:nowrap;text-shadow:0 0 7px currentColor;}
+@media(max-width:420px){.level-choice{grid-template-columns:minmax(112px,1fr) minmax(130px,1fr);gap:10px;padding:10px}.level-choice-stars{font-size:16px;letter-spacing:1px}}
+
 /* GRID */
 .grid-wrap{padding:1.5rem 1.5rem 3rem;}
 .section-label{font-family:'Oswald',sans-serif;font-size:calc(11px * var(--ui-font-scale));letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
@@ -658,7 +672,7 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 
 /* PRINT */
 @media print{
-#login-screen,header,#toolbar-wrap,#tags-dropdown,#artists-dropdown,#tip-popup,#promotion-overlay,#scroll-top-btn,#export-modal,#card-size-modal{display:none !important;}
+#login-screen,header,#toolbar-wrap,#tags-dropdown,#artists-dropdown,#levels-dropdown,#tip-popup,#promotion-overlay,#scroll-top-btn,#export-modal,#card-size-modal{display:none !important;}
   body{background:white !important;color:black !important;}
   .card{border:1px solid #ccc !important;break-inside:avoid;background:#f9f9f9 !important;}
   .card-title{color:black !important;}
@@ -731,14 +745,7 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
     </select>
     <button class="toolbar-select-button" id="artists-btn" type="button" onclick="openArtistsPanel()" aria-label="Wybierz jednego lub kilku wykonawców" aria-expanded="false" aria-controls="artists-dropdown"><span id="artists-btn-label">Wybierz wykonawcę</span><i class="ti ti-chevron-down" aria-hidden="true"></i></button>
     <input id="kat" type="hidden" value="">
-    <select id="lvl" aria-label="Poziom trudności" onchange="render()">
-      <option value="">Poziom trudności</option>
-      <option value="POCZĄTKUJĄCY">POCZĄTKUJĄCY — ★</option>
-      <option value="PROSTY">PROSTY — ★★</option>
-      <option value="ŚREDNI">ŚREDNI — ★★★</option>
-      <option value="TRUDNY">TRUDNY — ★★★★</option>
-      <option value="EXPERT">EXPERT — ★★★★★</option>
-    </select>
+    <button class="toolbar-select-button" id="levels-btn" type="button" onclick="openLevelsPanel()" aria-label="Wybierz jeden lub kilka poziomów trudności" aria-expanded="false" aria-controls="levels-dropdown"><span id="levels-btn-label">Wszystkie poziomy</span><i class="ti ti-chevron-down" aria-hidden="true"></i></button>
     <div class="toolbar-btns">
       <button class="btn-toolbar" id="favorites-filter-btn" type="button" onclick="toggleFavoritesFilter()" aria-label="Pokaż tylko ulubione utwory fingerstyle" aria-pressed="false" title="Pokaż tylko ulubione utwory fingerstyle" data-tooltip="Pokaż tylko ulubione utwory fingerstyle"><i class="ti ti-heart" aria-hidden="true"></i></button>
       <button class="btn-toolbar" id="card-size-btn" onclick="openCardSizeModal()" aria-label="Dostosuj wielkość kart i tekstu" title="Dostosuj wielkość kart i tekstu" data-tooltip="Dostosuj wielkość kart i tekstu"><i class="ti ti-zoom-in"></i></button>
@@ -792,6 +799,18 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
     </div>
     <div id="artists-choices"></div>
     <div class="artists-actions"><button class="artists-clear" type="button" onclick="clearPerformers()">WYCZYŚĆ</button><button class="artists-apply" type="button" onclick="closeArtistsPanel()">ZASTOSUJ</button></div>
+  </div>
+</div>
+
+<div id="levels-dropdown" role="dialog" aria-modal="true" aria-labelledby="levels-panel-title" aria-hidden="true">
+  <div id="levels-backdrop" onclick="closeLevelsPanel()"></div>
+  <div id="levels-panel" tabindex="-1">
+    <div class="artists-panel-header">
+      <span class="artists-panel-title" id="levels-panel-title">Wybierz poziomy trudności</span>
+      <button class="options-close" type="button" onclick="closeLevelsPanel()" aria-label="Zamknij wybór poziomów trudności">✕</button>
+    </div>
+    <div id="levels-choices"></div>
+    <div class="artists-actions"><button class="artists-clear" type="button" onclick="clearLevels()">WYCZYŚĆ</button><button class="artists-apply" type="button" onclick="closeLevelsPanel()">ZASTOSUJ</button></div>
   </div>
 </div>
 
@@ -1439,6 +1458,14 @@ let excelLoaded = false;
 let activeTags = new Set();
 let activePerformers = new Set();
 let performerCounts = new Map();
+const DIFFICULTY_LEVELS = Object.freeze([
+  {value:'POCZĄTKUJĄCY', count:1, cls:'d-stars-1'},
+  {value:'PROSTY', count:2, cls:'d-stars-2'},
+  {value:'ŚREDNI', count:3, cls:'d-stars-3'},
+  {value:'TRUDNY', count:4, cls:'d-stars-4'},
+  {value:'EXPERT', count:5, cls:'d-stars-5'}
+]);
+let activeLevels = new Set(DIFFICULTY_LEVELS.map(level => level.value));
 let showSinglePerformers = localStorage.getItem('fingerstyle_show_single_performers') !== '0';
 const savedSize = localStorage.getItem('fingerstyle_cardsize');
 let cardSize = savedSize ? parseInt(savedSize) : (window.innerWidth <= 640 ? 280 : 440);
@@ -3167,6 +3194,7 @@ const ACCESSIBLE_DIALOGS = [
   {id:'content-library-modal', close:closeContentLibrary},
   {id:'options-modal', close:closeOptions},
   {id:'artists-dropdown', close:closeArtistsPanel},
+  {id:'levels-dropdown', close:closeLevelsPanel},
   {id:'tags-dropdown', close:closeTagsPanel}
 ];
 
@@ -3697,7 +3725,7 @@ function updateResetButtonState() {
     document.getElementById('search').value.trim() ||
     document.getElementById('sort').value ||
     activePerformers.size ||
-    document.getElementById('lvl').value ||
+    activeLevels.size !== DIFFICULTY_LEVELS.length ||
     activeTags.size
   );
   button.classList.toggle('filters-active', filtersActive);
@@ -3707,7 +3735,8 @@ function updateResetButtonState() {
 
 function render() {
   const q  = normalizeSearchText(document.getElementById('search').value);
-  const lv = document.getElementById('lvl').value;
+  const selectedLevels = DIFFICULTY_LEVELS.filter(level => activeLevels.has(level.value));
+  const allLevelsSelected = selectedLevels.length === DIFFICULTY_LEVELS.length;
   const sv = document.getElementById('sort').value;
   updateFavoritesFilterButtonState();
   updateResetButtonState();
@@ -3716,7 +3745,7 @@ function render() {
   let filtered = exercises.filter(e =>
     (!q  || normalizeSearchText(e.nazwa).includes(q) || normalizeSearchText(e.wykonawca).includes(q) || normalizeSearchText(e.opis).includes(q)) &&
     (activePerformers.size === 0 || activePerformers.has(e.wykonawca)) &&
-    (!lv || e.poziom === lv) &&
+    (allLevelsSelected || activeLevels.has((e.poziom || '').toUpperCase().trim().replace('ZAAWANSOWANY', 'TRUDNY'))) &&
     (activeTags.size === 0 || [...activeTags].every(t => e.tagi.includes(t))) &&
     (sv !== 'fav' || favorites.has(e.id)) &&
     (sv !== 'new' || isNewEntry(e.data))
@@ -3736,7 +3765,11 @@ function render() {
   if (selectedPerformers.length === 1) parts.push(selectedPerformers[0]);
   else if (selectedPerformers.length > 1 && selectedPerformers.length <= 3) parts.push(selectedPerformers.join(', '));
   else if (selectedPerformers.length > 3) parts.push(`${selectedPerformers.length} wykonawców`);
-  if (lv) parts.push(lv);
+  if (!allLevelsSelected) {
+    if (selectedLevels.length === 1) parts.push(selectedLevels[0].value);
+    else if (selectedLevels.length > 1) parts.push(selectedLevels.length + ' poziomy');
+    else parts.push('Brak poziomów');
+  }
   activeTags.forEach(t => parts.push('#'+t));
   const sectionLabel = document.getElementById('section-label');
   const sectionTitle = parts.length ? parts.join(' · ') : 'Wszystkie opracowania fingerstyle';
@@ -3917,6 +3950,73 @@ function clearPerformers() {
   render();
 }
 
+
+
+function updateLevelsButtonState() {
+  const button = document.getElementById('levels-btn');
+  const label = document.getElementById('levels-btn-label');
+  if (!button || !label) return;
+  const selected = DIFFICULTY_LEVELS.filter(level => activeLevels.has(level.value));
+  if (selected.length === DIFFICULTY_LEVELS.length) label.textContent = 'Wszystkie poziomy';
+  else if (selected.length === 0) label.textContent = 'Brak poziomów';
+  else if (selected.length === 1) label.textContent = selected[0].value;
+  else label.textContent = selected.length + ' poziomy';
+  button.classList.toggle('active', selected.length !== DIFFICULTY_LEVELS.length);
+  button.title = selected.length === DIFFICULTY_LEVELS.length
+    ? 'Wyświetlane są wszystkie poziomy trudności'
+    : selected.length ? 'Wybrano: ' + selected.map(level => level.value).join(', ') : 'Nie wybrano żadnego poziomu trudności';
+}
+
+function renderLevelChoices() {
+  const container = document.getElementById('levels-choices');
+  if (!container) return;
+  container.innerHTML = '';
+  DIFFICULTY_LEVELS.forEach(level => {
+    const selected = activeLevels.has(level.value);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'level-choice' + (selected ? ' active' : '');
+    button.setAttribute('aria-pressed', String(selected));
+    button.innerHTML = '<span class="level-choice-name">' + level.value + '</span><span class="level-choice-stars ' + level.cls + '" aria-hidden="true">' + '★'.repeat(level.count) + '</span>';
+    button.addEventListener('click', () => {
+      if (activeLevels.has(level.value)) activeLevels.delete(level.value);
+      else activeLevels.add(level.value);
+      button.classList.toggle('active', activeLevels.has(level.value));
+      button.setAttribute('aria-pressed', String(activeLevels.has(level.value)));
+      updateLevelsButtonState();
+    });
+    container.appendChild(button);
+  });
+}
+
+function openLevelsPanel() {
+  const dialog = document.getElementById('levels-dropdown');
+  dialogReturnFocus.set('levels-dropdown', document.activeElement);
+  renderLevelChoices();
+  dialog.classList.add('open');
+  dialog.setAttribute('aria-hidden', 'false');
+  document.getElementById('levels-btn').setAttribute('aria-expanded', 'true');
+  requestAnimationFrame(() => document.getElementById('levels-panel').focus({preventScroll:true}));
+}
+
+function closeLevelsPanel() {
+  const dialog = document.getElementById('levels-dropdown');
+  dialog.classList.remove('open');
+  dialog.setAttribute('aria-hidden', 'true');
+  document.getElementById('levels-btn').setAttribute('aria-expanded', 'false');
+  const returnTarget = dialogReturnFocus.get('levels-dropdown');
+  dialogReturnFocus.delete('levels-dropdown');
+  if (returnTarget && typeof returnTarget.focus === 'function') returnTarget.focus({preventScroll:true});
+  updateLevelsButtonState();
+  render();
+}
+
+function clearLevels() {
+  activeLevels.clear();
+  updateLevelsButtonState();
+  renderLevelChoices();
+}
+
 function openTagsPanel() {
   const dialog = document.getElementById('tags-dropdown');
   dialogReturnFocus.set('tags-dropdown', document.activeElement);
@@ -4008,7 +4108,8 @@ document.addEventListener('DOMContentLoaded', enablePinchCardSizing);
 function resetFilters() {
   document.getElementById('search').value = '';
   document.getElementById('kat').value = '';
-  document.getElementById('lvl').value = '';
+  activeLevels = new Set(DIFFICULTY_LEVELS.map(level => level.value));
+  updateLevelsButtonState();
   document.getElementById('sort').value = '';
   activePerformers.clear();
   syncArtistFilterValue();
