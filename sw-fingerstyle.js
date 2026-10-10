@@ -1,4 +1,4 @@
-const CACHE_NAME = 'opracowania-fingerstyle-v3';
+const CACHE_NAME = 'opracowania-fingerstyle-v4';
 const APP_SHELL = [
   './',
   './manifest-fingerstyle.webmanifest',
